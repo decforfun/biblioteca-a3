@@ -1,0 +1,69 @@
+<div class="container">
+  <div class="botonera">
+    <app-button bordered square centered (onClick)="openModal()">
+      Agregar devolucion
+    </app-button>
+    <app-button
+      bordered
+      square
+      centered
+      (onClick)="startEdit()"
+      [disabled]="!DevolucionSeleccionada"
+    >
+      Editar devolucion
+    </app-button>
+  </div>
+
+  <div class="card">
+    <div #contenedorTabla>
+      <data-table
+        *ngIf="devoluciones.length > 0"
+        [source]="devoluciones"
+        [columns]="tableColumns"
+        tableStyle="bordered"
+        [maxHeight]="500"
+        (selectionChanged)="cargarDetalleDevolucion($event)"
+      ></data-table>
+    </div>
+    <app-aviso
+      *ngIf="devoluciones.length === 0"
+      titulo="Tabla de Devoluciones"
+      mensaje="Aqui se mostraran los devoluciones que se carguen desde la base de datos"
+    ></app-aviso>
+  </div>
+
+  <div class="card detalle">
+    <app-detalle-devolucion
+      *ngIf="DevolucionSeleccionada"
+      [devolucion]="DevolucionSeleccionada"
+    ></app-detalle-devolucion>
+    <app-aviso
+      *ngIf="!DevolucionSeleccionada"
+      titulo="Detalles de la devolucion"
+      mensaje="Aqui se mostraran los detalles de la devolucion que seleccione en la tabla"
+    ></app-aviso>
+    <div class="action">
+      <app-button
+        *ngIf="DevolucionSeleccionada"
+        square
+        centered
+        bordered
+        (onClick)="eliminarDevolucion()"
+      >
+        Eliminar devolucion
+      </app-button>
+    </div> 
+  </div>
+
+  <app-modal [(isOpen)]="isModalOpen">
+    <app-fm-devolucion
+      [titulo]="tituloModal"
+      [devolucion]="isEditing ? DevolucionSeleccionada : undefined"
+      [libros]="libros"
+      [usuarios]="usuarios"
+      [prestamos]="prestamos"
+      (onCancel)="onCancel()"
+      (onSubmit)="onSubmit($event)"
+    ></app-fm-devolucion>
+  </app-modal>
+</div>
